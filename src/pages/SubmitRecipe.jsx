@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Container, Heading, VStack, FormControl, FormLabel, Input, Textarea, Button, useToast } from "@chakra-ui/react";
+import { Container, Heading, VStack, FormControl, FormLabel, Input, Textarea, Button, useToast, Box, Text } from "@chakra-ui/react";
+import { StarIcon } from "@chakra-ui/icons";
 
 const SubmitRecipe = () => {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
+  const [rating, setRating] = useState(0);
   const toast = useToast();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically handle the form submission, e.g., send the data to a server
-    console.log("Recipe submitted:", { recipeName, ingredients, instructions });
+    console.log("Recipe submitted:", { recipeName, ingredients, instructions, rating });
     toast({
       title: "Recipe submitted.",
       description: "Your recipe has been submitted successfully.",
@@ -21,6 +23,11 @@ const SubmitRecipe = () => {
     setRecipeName("");
     setIngredients("");
     setInstructions("");
+    setRating(0);
+  };
+
+  const handleRating = (rate) => {
+    setRating(rate);
   };
 
   return (
@@ -50,6 +57,21 @@ const SubmitRecipe = () => {
             onChange={(e) => setInstructions(e.target.value)}
             placeholder="Enter the instructions"
           />
+        </FormControl>
+        <FormControl id="rating" isRequired>
+          <FormLabel>Rating</FormLabel>
+          <Box display="flex" alignItems="center">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <StarIcon
+                key={star}
+                boxSize={6}
+                color={star <= rating ? "teal.500" : "gray.300"}
+                onClick={() => handleRating(star)}
+                cursor="pointer"
+              />
+            ))}
+          </Box>
+          <Text>{rating} out of 5</Text>
         </FormControl>
         <Button type="submit" colorScheme="teal" size="lg">Submit Recipe</Button>
       </VStack>
